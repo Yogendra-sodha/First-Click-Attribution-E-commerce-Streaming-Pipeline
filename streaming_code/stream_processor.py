@@ -2,7 +2,7 @@
 # Then it difenes sql table trhough flink table api which stays in kafka topic
 # but does not store data and modified execution time and state
 # though datastream api and executes the sql queries and outputs data in sinks table
-#  defined in the code
+# defined in the code
 
 # req jars
 # class streamjob,kafka,click,checkout,application users, application database,application_attibuted
