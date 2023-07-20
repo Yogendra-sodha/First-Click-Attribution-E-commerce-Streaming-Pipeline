@@ -1,6 +1,7 @@
 --create commerce
 CREATE SCHEMA commerce;
 
+-- Use commerce schema
 SET
     search_path TO commerce;
 
@@ -15,9 +16,9 @@ CREATE TABLE users(
 CREATE TABLE products(
     id INT PRIMARY KEY,
     NAME VARCHAR(225) NOT NULL,
-    desc TEXT,
+    description TEXT,
     price REAL NOT NULL
-)
+);
 
 --Modify replica changes
 
