@@ -6,7 +6,7 @@ down:
 	docker compose down
 
 run-checkout-attribution-job:
-	docker exec jobmanager ./bin/flink run --python ./code/checkout_attribution.py
+	docker exec jobmanager ./bin/flink run --python ./streaming_code/stream_processor.py
 
 sleep:
 	sleep 20

@@ -20,7 +20,10 @@ def gen_user_data(num_users: int) -> None:
     """
     for id in range(num_users):
         conn = psycopg2.connect(
-        dbname='postgres', user='postgres', host='postgres', password='postgres'
+            dbname='postgres',
+            user='postgres',
+            host='postgres',
+            password='postgres',
         )
 
         curr = conn.cursor()
@@ -40,8 +43,9 @@ def gen_user_data(num_users: int) -> None:
         )
 
         conn.commit()
-        curr.close()        
+        curr.close()
     return
+
 
 def random_user_agent():
     return fake.user_agent()
@@ -107,7 +111,7 @@ def gen_checkout_event(user_id, product_id):
 
 def push_to_kafka(event, topic):
     producer = Producer({'bootstrap.servers': 'kafka:9092'})
-    producer.produce(topic, json.dump(event).encode('utf-8'))
+    producer.produce(topic, json.dumps(event).encode('utf-8'))
     producer.flush()
 
 
@@ -117,7 +121,7 @@ def push_clickstream_data(num_clicks: int) -> None:
         click_event = gen_click_event(user_id)
         push_to_kafka(click_event, 'clicks')
 
-        if random.randint(1, 200) >= 160:
+        if random.randint(1, 200) <= 160:
             click_event = gen_click_event(user_id, click_event['product_id'])
             push_to_kafka(click_event, 'clicks')
 

@@ -10,7 +10,7 @@ services:
       - "9249:9249"
     command: jobmanager
     volumes:
-      - ./code:/opt/flink/code
+      - ./streaming_code:/opt/flink/code
     environment:
       - |
         FLINK_PROPERTIES=
@@ -26,7 +26,7 @@ services:
     ports:
       - "9250:9249"
     volumes:
-      - ./code:/opt/flink/code
+      - ./streaming_code:/opt/flink/code
     scale: 1
     environment:
       - |
