@@ -1,7 +1,7 @@
 INSERT INTO 
     attributed_checkouts
     SELECT
-        checkouts_id,
+        checkout_id,
         username as user_name,
         click_id,
         product_id,
@@ -16,7 +16,7 @@ INSERT INTO
     FROM
         (
             SELECT
-            co.checkouts_id,
+            co.checkout_id,
             u.username,
             c1.click_id,
             co.product_id,
@@ -25,6 +25,7 @@ INSERT INTO
             co.shipping_address,
             co.billing_address,
             co.user_agent,
+            co.ip_address,
             co.datetime_occured as checkout_time,
             c1.datetime_occured as click_time,
             ROW_NUMBER() OVER( PARTITION BY

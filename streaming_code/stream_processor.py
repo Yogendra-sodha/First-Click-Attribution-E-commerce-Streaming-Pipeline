@@ -24,7 +24,7 @@ REQUIRED_JARS = [
 @dataclass(frozen=True)
 class Stream_job_config:
     job_name : str = "checkout-attribution"
-    jars : list[str] = field(default_factory = lambda : REQUIRED_JARS)
+    jars : List[str] = field(default_factory = lambda : REQUIRED_JARS)
     spanshot_checkout : int = 10
     spanshot_pause : int = 5
     spanshot_timeout : int =  5
@@ -33,7 +33,7 @@ class Stream_job_config:
 @dataclass(frozen=True)
 class Kafka_config:
     connector : str = 'kafka'
-    server : str = 'kafka:9092'
+    bootstrap_servers : str = 'kafka:9092'
     scan_startup_mode : str = 'earliest-offset'
     consumer_group_id : str = 'flink-consumer-group-1'
 
@@ -48,21 +48,21 @@ class Checkout_conifig(Kafka_config):
     format : str = 'json'
 
 @dataclass(frozen=True)
-class Database_config(Kafka_config):
+class Database_config:
     connector : str = 'jdbc'
-    url : str = 'jdbc:postgresql//postgres:5432/postgres'
+    url : str = 'jdbc:postgresql://postgres:5432/postgres'
     username : str = 'postgres'
     password : str = 'postgres'
-    driver : str = 'ord.postgresql.Driver'
+    driver : str = 'org.postgresql.Driver'
 
 
 @dataclass(frozen=True)
 class Users_table_config(Database_config):
-    table : str = 'commerce.users'
+    table_name : str = 'commerce.users'
 
 @dataclass(frozen=True)
 class Attribute_checkouts_config(Database_config):
-    table : str = 'commerce.attributed_chceckouts'
+    table_name : str = 'commerce.attributed_chceckouts'
 
 
 def get_attribute_checkouts(config : Stream_job_config) -> tuple[StreamExecutionEnvironment, StreamTableEnvironment]:
@@ -94,7 +94,7 @@ def get_attribute_checkouts(config : Stream_job_config) -> tuple[StreamExecution
 
 def get_sql_query(entity : str, 
                   type : str = 'source', 
-                  template_env : Environment = Environment(loader = FileSystemLoader("streaming_code/"))) -> str:
+                  template_env : Environment = Environment(loader = FileSystemLoader("code/"))) -> str:
     config_map = {
         'clicks' : Click_conifig(),
         'checkouts' : Checkout_conifig(),
@@ -119,7 +119,7 @@ def process_attribution_jobs(t_env : StreamTableEnvironment,
 
     # excuting the process that 
     stat_exec = t_env.create_statement_set()
-    stat_exec.add_insert(get_sql_query('attribute_checkouts','process'))
+    stat_exec.add_insert_sql(get_sql_query('attribute_checkouts','process'))
 
     checkout_attribution_job = stat_exec.execute()
     print(

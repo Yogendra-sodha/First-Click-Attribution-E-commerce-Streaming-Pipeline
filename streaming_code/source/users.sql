@@ -6,7 +6,7 @@ CREATE TEMPORARY TABLE users (
 ) WITH (
     'connector' = '{{ connector }}',
     'url' = '{{ url }}',
-    'table_name' = '{{ table_name }}',
+    'table-name' = '{{ table_name }}',
     'username' = '{{ username }}',
     'password' = '{{ password }}',
     'driver' = '{{ driver }}'

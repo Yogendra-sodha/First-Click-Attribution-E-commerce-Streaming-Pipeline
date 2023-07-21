@@ -16,13 +16,13 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager      
 
-  taskmanger:
-    container_name: taskmanger
+  taskmanager:
+    container_name: taskmanager
     build:
       context: ./container/flink
     depends_on:
       - jobmanager
-    command: taskmanger
+    command: taskmanager
     ports:
       - "9250:9249"
     volumes:
@@ -70,7 +70,7 @@ services:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_ADVERTISED_LISTENERS=INSIDE://:9092,OUTSIDE://:9093
       - KAFKA_CFG_LISTENERS=INSIDE://:9092,OUTSIDE://:9093
-      - KAFKA_CFG_LISTENERS_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INSIDE
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:

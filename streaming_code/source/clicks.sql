@@ -8,13 +8,13 @@ CREATE TABLE clicks(
     user_agent STRING,
     ip_address STRING,
     datetime_occured TIMESTAMP(3),
-    processing_time as PROCTIME(),
-    WATERMARK for datetime_occured - INTERVAL '15' SECOND
+    processing_time AS PROCTIME(),
+    WATERMARK FOR datetime_occured as datetime_occured - INTERVAL '15' SECOND
 ) WITH (
-    'connector'='{{connector}}',
-    'topic'='{{topic}}',
-    'properties.bootstrap.server'='{{bootstrap_servers}}',
-    'propertis.group_id'='{{consumer_group_id}}',
-    'scan.startup,mode'='{{scan_startup_mode}}',
-    'format'='{{format}}'
+    'connector' = '{{connector}}',
+    'topic' = '{{topic}}',
+    'properties.bootstrap.servers' = '{{bootstrap_servers}}',
+    'properties.group.id' = '{{consumer_group_id}}',
+    'scan.startup.mode' = '{{scan_startup_mode}}',
+    'format' = '{{format}}'
 );
