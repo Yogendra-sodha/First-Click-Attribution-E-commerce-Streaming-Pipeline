@@ -12,13 +12,13 @@ I have used technologies like Apache Flink and Apache Kafka to create a real-tim
 
 🏰 **Project Architecture:**
 Our project's magical river flow looks like this:
-1. The website generates clicks and checkout data (like the source of the river).
-2. These clicks and checkout data are sent to special topics in Apache Kafka, which acts like a transportation system for them (think of it as boats and rafts! 🚣).
+1. The website generates clicks and checkout data (like the source of the river) as defined in this [py script](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/datagen/fake_data_gen.py)
+2. These [clicks](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/postgres/init.sql) and [checkouts](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/postgres/init.sql) data are sent to special topics in Apache Kafka, which acts like a transportation system for them (think of it as boats and rafts! 🚣).
 3. Apache Flink comes in to read the data from Kafka topics and does some smart things with it (like wizards using magic spells! ✨).
-4. We have a special place in our cluster (a big magical box!) to store the click data for the last hour only. We only remember one click per user for each product (like keeping only the important stuff).
-5. Flink then adds user information to the checkout data by talking to the Postgres database.
-6. The magic moment comes when Flink joins the enriched checkout data with the special clicks from the cluster state (like connecting puzzle pieces 🧩) to find the magical click that led to each checkout!
-7. All the magical results are stored in a special table in the Postgres database (like keeping a record of our adventures).
+4. We have a [special place](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/streaming_code/stream_processor.py) in our cluster (a big magical box!) to store the click data for the last hour only. We only remember one click per user for each product (like keeping only the important stuff).
+5. Flink then adds user information to the checkout data by talking to the [Postgres database](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/docker-compose.yml).
+6. The magic moment comes when Flink joins the [enriched checkout data](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/streaming_code/process/attribute_checkouts.sql) with the special clicks from the cluster state (like connecting puzzle pieces 🧩) to find the magical click that led to each checkout!
+7. All the magical results are stored in a [special table](https://github.com/Yogendra-sodha/First-Click-Attribution-E-commerce-Streaming-Pipeline/blob/main/streaming_code/sink/attributed_checkouts.sql) in the Postgres database (like keeping a record of our adventures).
 
 🔧 **Code Design:**
 We have some cool Python scripts that generate synthetic users, click and checkout data. We use Apache Table API to define how we want to process the data, like making our spells for enriching and attributing checkouts. We also define where we want to store the results (like making sure we keep track of everything!).
