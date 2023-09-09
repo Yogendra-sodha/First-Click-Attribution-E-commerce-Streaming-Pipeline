@@ -18,6 +18,25 @@ def gen_user_data(num_users: int) -> None:
     This function generates fake user profile by adding num_users specified
     in num_user param
     """
+    conn = psycopg2.connect(
+        dbname='postgres',
+        user='postgres',
+        host='postgres',
+        password='postgres',
+    )
+    curr = conn.cursor()
+    curr.execute(
+        """
+        SELECT COUNT(*) FROM commerce.users
+        """
+    )
+    user_count = curr.fetchone()[0]
+
+    if user_count >= num_users:
+        # Already have enough users, no need to generate more
+        curr.close()
+        return
+
     for id in range(num_users):
         conn = psycopg2.connect(
             dbname='postgres',
@@ -72,6 +91,7 @@ def gen_click_event(user_id, product_id=None):
 
     click_event = {
         "click_id": click_id,
+        "user_id": user_id,
         "product_id": product_id,
         "product": product,
         "price": price,
@@ -96,6 +116,9 @@ def gen_checkout_event(user_id, product_id):
     datetime_occured = datetime.now()
 
     checkout_event = {
+        "checkout_id": str(uuid4()),
+        "user_id": user_id,
+        "product_id": product_id,
         "payment_method": payment_method,
         "total_amount": total_amount,
         "shipping_address": shipping_address,
@@ -118,16 +141,16 @@ def push_to_kafka(event, topic):
 def push_clickstream_data(num_clicks: int) -> None:
     for i in range(num_clicks):
         user_id = random.randint(1, 200)
-        click_event = gen_click_event(user_id)
+        click_event = gen_click_event(user_id=user_id)
         push_to_kafka(click_event, 'clicks')
 
-        if random.randint(1, 200) <= 160:
+        while random.randint(1, 200) >= 110:
             click_event = gen_click_event(user_id, click_event['product_id'])
             push_to_kafka(click_event, 'clicks')
 
             push_to_kafka(
                 gen_checkout_event(
-                    click_event['user_id'], click_event['product_id']
+                    click_event["user_id"], click_event["product_id"]
                 ),
                 'checkouts',
             )
